@@ -1,0 +1,17 @@
+services:
+  sistema_escolar:
+    build: .
+    container_name: sistema_escolar
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: admin
+      POSTGRES_DB: sistema_escolar
+      POSTGRES_INITDBARGS: "--locale=es_MX.UTF-8 --encoding=UTF8"
+    volumes:
+      - sistema_escolar:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  sistema_escolar:
