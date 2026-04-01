@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 from conexion_2 import create, read
 from baseWin import baseWindow
 from datetime import date
-import sys, os
+import sys, os, string
 
 carreras = read("carrera", "count(*)")[0]
 carreras = carreras[0]
@@ -124,6 +124,17 @@ class enrollStudent(baseWindow):
         current_year = date.today().year
         estudiantes = (read("estudiante", "count(*)", f"WHERE LEFT(matricula, 4) = '{current_year}'")[0])[0] + 1
         matricula = str(current_year)+"-"+f"{estudiantes:03d}"
+        try:
+            nombre = self.entry.text()
+            if nombre.isspace():
+                raise Exception()
+            for i in nombre:
+                if not(i.isspace()) and not(i.isalpha):
+                    raise Exception()
+        except:
+            self.entry.setPlaceholderText("Caracteres inválidos")
+            self.entry.setText("")
+            return
         try:
             student = Estudiante(matricula=matricula, nombre=self.entry.text(), id_carrera=self.majorList.currentIndex()+1)
             student_dic = student.model_dump()
